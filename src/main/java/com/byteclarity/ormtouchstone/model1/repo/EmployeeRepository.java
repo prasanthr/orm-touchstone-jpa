@@ -1,6 +1,7 @@
 package com.byteclarity.ormtouchstone.model1.repo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 
 import com.byteclarity.ormtouchstone.model1.Employee;
 
@@ -11,5 +12,9 @@ import com.byteclarity.ormtouchstone.model1.Employee;
  */
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 		
+
+	//@Query("SELECT FROM EMonth ")
+	//Integer findEmployee(@Param("prevMonth") Date prevMonth);
+	
 
 }

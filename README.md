@@ -11,5 +11,6 @@ Domain objects used in the project models a simple HR Management application and
 
 
 This project is for testing a Hibernate-JPA-SpringData setup. Project is organized as a spring-boot application with maven.
-Different use-cases are organized as JUnit tests. To run the tests, simply run "mvn test".
+It uses an embedded H2 database, so there is no need to configure datasources.
+Different use-cases are organized as TestNG tests. To run the tests, simply run "mvn test".
  

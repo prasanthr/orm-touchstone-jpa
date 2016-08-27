@@ -23,7 +23,7 @@ public class OrmTouchstoneApplication {
 		
 		return (evt) -> {
 			
-	    	Cubicle cub1 = new Cubicle();
+	    	/*Cubicle cub1 = new Cubicle();
 	    	cub1.setBuilding("building1");
 	    	cub1.setNumber("100");
 	    	cubicleRepo.save(cub1);
@@ -47,7 +47,7 @@ public class OrmTouchstoneApplication {
 	    	emp2.setDepartment(dep1);
 	    	emp2.setCubicle(cub2);
 	    	
-	    	empRepo.save(emp2);
+	    	empRepo.save(emp2);*/
 	    	
 	    	
 		};

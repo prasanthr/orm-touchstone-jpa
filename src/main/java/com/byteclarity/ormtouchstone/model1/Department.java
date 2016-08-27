@@ -29,6 +29,14 @@ public class Department {
 	//default fetch-type is LAZY
 	@OneToMany (mappedBy="department")
 	private List<Employee> employees;
+	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getName() {
 		return name;

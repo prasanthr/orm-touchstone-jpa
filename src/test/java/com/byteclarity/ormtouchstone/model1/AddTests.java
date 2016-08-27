@@ -17,17 +17,21 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
+import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.byteclarity.ormtouchstone.OrmTouchstoneApplication;
 import com.byteclarity.ormtouchstone.model1.repo.CubicleRepository;
 import com.byteclarity.ormtouchstone.model1.repo.DepartmentRepository;
 import com.byteclarity.ormtouchstone.model1.repo.EmployeeRepository;
+import com.byteclarity.ormtouchstone.model1.repo.ProjectRepository;
 
 
 @SpringBootTest
 //@DirtiesContext
-public class FetchTests extends AbstractTestNGSpringContextTests {
-
+//public class AddTests extends AbstractTestNGSpringContextTests {
+public class AddTests extends AbstractTransactionalTestNGSpringContextTests {
+		
 	final Logger log = LoggerFactory.getLogger(this.getClass());
 	
     @Autowired
@@ -36,6 +40,8 @@ public class FetchTests extends AbstractTestNGSpringContextTests {
     private DepartmentRepository departmentRepo;
     @Autowired
     private CubicleRepository cubicleRepo;
+    @Autowired
+    private ProjectRepository projRepo;
     
     private Map<String, Long> idMap = new HashMap<>();
     
@@ -72,43 +78,28 @@ public class FetchTests extends AbstractTestNGSpringContextTests {
     	empRepo.save(emp2);
     	idMap.put("emp2", emp2.getId());
     	
+    	Project proj1 = new Project("Hell's Kitchen Cleanup");
+    	projRepo.save(proj1);
+    	idMap.put("proj1", proj1.getId());
+    	
+    	
     }
     
-
-    //fetching employee
-  	//one-to-one and many-to-one are eagerly fetched
-  	//collections are lazily fetched
+    //adding children to 1-n relationship and peers in 1-1 is straightforward (see setup data)
+    
+    //adding children to owning side of n-n
     @Test
-	public void fetchEmployee() {
-    	
-    	Employee emp11 = empRepo.findOne(idMap.get("emp1"));
-    	log.info("emp1="+emp11);
-    	log.info("emp.dep="+emp11.getDepartment());
-    	log.info("emp.cubicle="+emp11.getCubicle());
-    	
-    }
-    
-	//fetching department
-	//department.employees one to many is lazily fetched
-    @Test(expectedExceptions=LazyInitializationException.class)
-    //@SuppressWarnings("unused")
-    public void fetchDepartment() {
-    	
-    	Department dep1 = departmentRepo.findOne(idMap.get("dep1"));
-    	log.info("dep1="+dep1);	
-    	int count = dep1.getEmployees().size();
-    }
-    
-    @Test
-	public void fetchCubicle() {
-    	
-    	Cubicle c1 = cubicleRepo.findOne(idMap.get("cub1"));
-    	log.info("cube1="+c1);
-    	log.info("emp.dep="+c1.getEmployee());
+    @Transactional
+    public void addTest1() {
+  
+    	Employee emp1  = empRepo.findOne(idMap.get("emp1"));
+    	Project proj1 = projRepo.findOne(idMap.get("proj1"));
+    	emp1.addProject(proj1);
+    	proj1.addEmployee(emp1);
+    	empRepo.save(emp1);
+    	projRepo.save(proj1);
     	
     }
-   
-    
-    
+  
 
 }

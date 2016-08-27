@@ -28,6 +28,14 @@ public class Cubicle  {
     public Cubicle() {
 
 	}
+    
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 
 	public String getBuilding() {
 		return building;
@@ -53,6 +61,10 @@ public class Cubicle  {
 		this.employee = employee;
 	}    
     
+	@Override
+    public String toString() {
+        return String.format("Cubicle[id=%d, number=%s]", id, number);
+    }
     
 
 }

@@ -1,15 +1,16 @@
 package com.byteclarity.ormtouchstone.model1;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.*;
 
 
-@SuppressWarnings("serial")
 @Entity
 @Table(name = "EMPLOYEE")
-public class Employee implements java.io.Serializable {
+public class Employee {
 
 	@Id
 	@GeneratedValue
@@ -35,6 +36,11 @@ public class Employee implements java.io.Serializable {
 	@ManyToOne
 	@JoinColumn(name="DEPT_ID")
 	private Department department;
+	
+	//default fetch is LAZY
+	@ManyToMany
+	@JoinTable(name="EMPLOYEE_PROJECTS")
+	private Set<Project> projects = new HashSet<>();
 	
 
     protected Employee() {
@@ -77,6 +83,10 @@ public class Employee implements java.io.Serializable {
 
 	public void setDepartment(Department department) {
 		this.department = department;
+	}
+	
+	public void addProject(Project proj) {
+		projects.add(proj);
 	}
 
 	@Override
