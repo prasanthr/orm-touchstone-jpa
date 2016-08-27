@@ -11,10 +11,6 @@ import com.byteclarity.ormtouchstone.model1.Employee;
  * 
  */
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
-		
-
-	//@Query("SELECT FROM EMonth ")
-	//Integer findEmployee(@Param("prevMonth") Date prevMonth);
-	
+			
 
 }

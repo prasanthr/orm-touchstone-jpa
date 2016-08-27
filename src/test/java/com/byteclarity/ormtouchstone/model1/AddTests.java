@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
@@ -82,24 +83,45 @@ public class AddTests extends AbstractTransactionalTestNGSpringContextTests {
     	projRepo.save(proj1);
     	idMap.put("proj1", proj1.getId());
     	
+    	//emp1.addProject(proj1);
+    	//empRepo.save(emp1);
+    	
     	
     }
     
     //adding children to 1-n relationship and peers in 1-1 is straightforward (see setup data)
     
-    //adding children to owning side of n-n
-    @Test
+    //adding existing children to owning side of n-n
+    //@Test
     @Transactional
+    @Rollback(false)
     public void addTest1() {
   
     	Employee emp1  = empRepo.findOne(idMap.get("emp1"));
     	Project proj1 = projRepo.findOne(idMap.get("proj1"));
+   
     	emp1.addProject(proj1);
-    	proj1.addEmployee(emp1);
-    	empRepo.save(emp1);
-    	projRepo.save(proj1);
+    	empRepo.save(emp1); 	
     	
     }
+    
+    //adding new children to owning side of n-n
+    @Test
+    @Transactional
+    @Rollback(false)
+    public void addTest2() {
+  
+    	Employee emp1  = empRepo.findOne(idMap.get("emp1"));
+    	Project proj2 = new Project("Defeating Hand");
+    	
+    	//new project has to be saved, unless you have cascade=CascadeType.PERSIST set
+    	projRepo.save(proj2);
+    	
+    	emp1.addProject(proj2);
+    	empRepo.save(emp1); 	
+    	
+    }
+    
   
 
 }

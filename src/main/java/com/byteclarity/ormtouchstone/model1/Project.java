@@ -3,6 +3,7 @@ package com.byteclarity.ormtouchstone.model1;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -44,6 +45,10 @@ public class Project  {
 	
 	public void addEmployee(Employee emp) {
 		employees.add(emp);
+	}
+	
+	public Set<Employee> getEmployees() {
+		return employees;
 	}
 	
     @Override

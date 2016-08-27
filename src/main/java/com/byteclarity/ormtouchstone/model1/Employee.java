@@ -88,6 +88,11 @@ public class Employee {
 	public void addProject(Project proj) {
 		projects.add(proj);
 	}
+	
+	public Set<Project> getProjects() {
+		return projects;
+	}
+	
 
 	@Override
     public String toString() {

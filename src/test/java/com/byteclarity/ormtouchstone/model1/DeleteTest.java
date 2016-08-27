@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.hibernate.LazyInitializationException;
+import org.hibernate.exception.ConstraintViolationException;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -13,10 +14,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
+import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.byteclarity.ormtouchstone.OrmTouchstoneApplication;
 import com.byteclarity.ormtouchstone.model1.repo.CubicleRepository;
@@ -27,8 +32,9 @@ import com.byteclarity.ormtouchstone.model1.repo.ProjectRepository;
 
 @SpringBootTest
 //@DirtiesContext
-public class FetchTests extends AbstractTestNGSpringContextTests {
-
+//public class AddTests extends AbstractTestNGSpringContextTests {
+public class DeleteTest extends AbstractTransactionalTestNGSpringContextTests {
+		
 	final Logger log = LoggerFactory.getLogger(this.getClass());
 	
     @Autowired
@@ -72,49 +78,47 @@ public class FetchTests extends AbstractTestNGSpringContextTests {
     	emp1.addProject(proj1);
     	empRepo.save(emp1);
     	idMap.put("emp1", emp1.getId());
-    	
+    
     	Employee emp2 = new Employee("Foggy Nelson");
     	emp2.setDepartment(dep1);
     	emp2.setCubicle(cub2);    	
     	empRepo.save(emp2);
     	idMap.put("emp2", emp2.getId());
     	
+    	
     }
     
+    //Deleting child of 1-n
+	//This will cause delete of collections and many-to-many relations even without cascade
+    //@Test
+    /*
+    @Transactional
+    @Rollback(false)
+    public void addTest1() {
 
-    //fetching employee
-  	//one-to-one and many-to-one are eagerly fetched
-    //many-to-many is lazily fetched.
-  	//collections are lazily fetched
-    @Test
-	public void fetchEmployee() {
+    	Employee emp1 = empRepo.findOne(idMap.get("emp1"));
+    	empRepo.delete(emp1);
     	
-    	Employee emp11 = empRepo.findOne(idMap.get("emp1"));
-    	log.info("emp1="+emp11);
-    	log.info("emp.dep="+emp11.getDepartment());
-    	log.info("emp.cubicle="+emp11.getCubicle());
-    	//log.info("emp.projects="+emp11.getProjects());
+    	Department dep1  = departmentRepo.findOne(idMap.get("dep1"));
+    	departmentRepo.delete(dep1);
+    	
+    }*/
+    
+    
+    //Deleting the parent of 1-n won't work because of constraints    
+    //Unless the deleteOrphan is specified
+    /*
+    @Test
+    @Transactional
+    @Rollback(false)
+    public void addTest2() {
+
+    	Department dep1  = departmentRepo.findOne(idMap.get("dep1"));
+    	departmentRepo.delete(dep1);
     	
     }
-    
-	//fetching department
-	//department.employees one to many is lazily fetched
-    @Test(expectedExceptions=LazyInitializationException.class)
-    @SuppressWarnings("unused")
-    public void fetchDepartment() {
-    	Department dep1 = departmentRepo.findOne(idMap.get("dep1"));
-    	log.info("dep1="+dep1);	
-    	int count = dep1.getEmployees().size();
-    }
-    
-    @Test
-	public void fetchCubicle() {    	
-    	Cubicle c1 = cubicleRepo.findOne(idMap.get("cub1"));
-    	log.info("cube1="+c1);
-    	log.info("emp.dep="+c1.getEmployee());
-    }
-   
-    
-    
+    */
+
+  
 
 }
